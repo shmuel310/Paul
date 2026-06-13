@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保羅的旅程</title>
+<style>
+  :root{
+    --parchment:#F2E9D8;
+    --ink:#2E2A24;
+    --terracotta:#C1602B;
+    --sea:#2B4C5C;
+    --olive:#7C8A4A;
+    --gold:#D9A441;
+    --line:#C9BCA2;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  body{
+    background:var(--parchment);
+    color:var(--ink);
+    font-family:"Noto Serif TC","Songti TC",serif;
+    line-height:1.8;
+  }
+
+  /* HERO */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:6vh 6vw;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(193,96,43,0.12), transparent 45%),
+      radial-gradient(circle at 75% 75%, rgba(43,76,92,0.12), transparent 50%),
+      var(--parchment);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(135deg, rgba(46,42,36,0.025) 0 2px, transparent 2px 14px);
+    pointer-events:none;
+  }
+  .hero-eyebrow{
+    font-family:"Noto Sans TC",sans-serif;
+    letter-spacing:0.4em;
+    font-size:0.75rem;
+    color:var(--terracotta);
+    text-transform:uppercase;
+    margin-bottom:1.2rem;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem,8vw,5rem);
+    font-weight:700;
+    letter-spacing:0.15em;
+    color:var(--ink);
+  }
+  .hero h1 span{
+    color:var(--terracotta);
+  }
+  .hero-sub{
+    margin-top:1.2rem;
+    font-size:clamp(1rem,2.4vw,1.25rem);
+    color:#5A5347;
+    max-width:32em;
+  }
+  .hero-route{
+    margin-top:3rem;
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:0.85rem;
+    letter-spacing:0.2em;
+    color:var(--sea);
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.6em 1.2em;
+    justify-content:center;
+  }
+  .hero-route span::after{
+    content:"  →";
+    color:var(--gold);
+    margin-left:0.6em;
+  }
+  .hero-route span:last-child::after{content:none;}
+  .scroll-hint{
+    position:absolute;
+    bottom:2.5rem;
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:0.75rem;
+    letter-spacing:0.3em;
+    color:#8a8170;
+    animation:bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{transform:translateY(0);opacity:0.6;}
+    50%{transform:translateY(8px);opacity:1;}
+  }
+
+  /* SECTION HEADERS */
+  .era{
+    max-width:880px;
+    margin:0 auto;
+    padding:5rem 6vw 1rem;
+  }
+  .era-label{
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:0.75rem;
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    color:var(--olive);
+    margin-bottom:0.6rem;
+  }
+  .era-title{
+    font-size:clamp(1.6rem,4vw,2.4rem);
+    font-weight:700;
+    color:var(--sea);
+    border-bottom:2px solid var(--line);
+    padding-bottom:0.8rem;
+  }
+
+  /* TIMELINE */
+  .timeline{
+    max-width:880px;
+    margin:0 auto;
+    padding:1rem 6vw 4rem;
+    position:relative;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left:calc(6vw + 1.1rem);
+    top:0;
+    bottom:0;
+    width:2px;
+    background:linear-gradient(to bottom, transparent, var(--line) 4%, var(--line) 96%, transparent);
+  }
+
+  .stop{
+    position:relative;
+    padding:2.4rem 0 2.4rem 3.2rem;
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .stop.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .stop-marker{
+    position:absolute;
+    left:0.05rem;
+    top:2.6rem;
+    width:1.1rem;
+    height:1.1rem;
+    border-radius:50%;
+    background:var(--parchment);
+    border:3px solid var(--terracotta);
+    box-shadow:0 0 0 4px var(--parchment);
+  }
+  .stop.start .stop-marker, .stop.end .stop-marker{
+    border-color:var(--sea);
+    background:var(--sea);
+  }
+
+  .stop-time{
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:0.78rem;
+    letter-spacing:0.2em;
+    color:var(--terracotta);
+    text-transform:uppercase;
+    margin-bottom:0.4rem;
+  }
+  .stop-place{
+    font-size:clamp(1.2rem,3vw,1.6rem);
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:0.5rem;
+  }
+  .stop-place .region{
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:0.7rem;
+    letter-spacing:0.15em;
+    color:#9a9080;
+    font-weight:400;
+    margin-left:0.6em;
+    vertical-align:middle;
+  }
+  .stop-body{
+    font-size:1rem;
+    color:#4a443a;
+    margin-bottom:0.8rem;
+  }
+  .stop-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.5rem 1.2rem;
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:0.85rem;
+  }
+  .stop-meta div{
+    color:#6b6354;
+  }
+  .stop-meta b{
+    color:var(--sea);
+    font-weight:700;
+    margin-right:0.3em;
+  }
+  .verse{
+    display:inline-block;
+    margin-top:0.3rem;
+    background:rgba(193,96,43,0.08);
+    border-left:3px solid var(--terracotta);
+    padding:0.5rem 0.9rem;
+    font-size:0.9rem;
+    color:#5a5347;
+    border-radius:0 4px 4px 0;
+  }
+
+  /* FOOTER */
+  .footer{
+    text-align:center;
+    padding:5rem 6vw 6rem;
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:0.85rem;
+    color:#9a9080;
+    letter-spacing:0.1em;
+  }
+  .footer .amen{
+    font-family:"Noto Serif TC",serif;
+    font-size:1.4rem;
+    color:var(--terracotta);
+    letter-spacing:0.3em;
+    margin-bottom:0.8rem;
+  }
+
+  @media (max-width:560px){
+    .timeline::before{left:calc(6vw + 0.55rem);}
+    .stop{padding-left:2.4rem;}
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-eyebrow">使徒行傳 13–28 章 · 加拉太書 · 羅馬書</div>
+  <h1>保羅<span>的旅程</span></h1>
+  <p class="hero-sub">從大馬色路上的光，到羅馬獄中的筆——一個被恩典追上的人，走遍地中海世界傳揚復活的基督。</p>
+  <div class="hero-route">
+    <span>大馬色</span><span>安提阿</span><span>居比路</span><span>腓立比</span>
+    <span>雅典</span><span>哥林多</span><span>以弗所</span><span>耶路撒冷</span><span>羅馬</span>
+  </div>
+  <div class="scroll-hint">向下捲動 ↓</div>
+</section>
+
+<!-- ============ 早年與蒙召 ============ -->
+<div class="era">
+  <div class="era-label">第一階段 · A.D. 5–47</div>
+  <h2 class="era-title">早年生平與蒙召</h2>
+</div>
+<div class="timeline">
+
+  <div class="stop start">
+    <div class="stop-marker"></div>
+    <div class="stop-time">約 A.D. 5–10 年</div>
+    <div class="stop-place">大數 <span class="region">基利家 · 出生地</span></div>
+    <div class="stop-body">保羅（原名掃羅）生於大數，是法利賽人，亦持有羅馬公民身分，後在耶路撒冷受教於迦瑪列門下。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>迦瑪列、法利賽人</div>
+    </div>
+    <div class="verse">使徒行傳 22:3 — 「我是猶太人，生在基利家的大數，但在這城裡長大。」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">約 A.D. 34–36 年</div>
+    <div class="stop-place">大馬色路上 <span class="region">敘利亞</span></div>
+    <div class="stop-body">掃羅原為迫害教會者，曾參與司提反殉道。前往大馬色途中，復活的主耶穌向他顯現，使他眼瞎三日，後由亞拿尼亞醫治並受洗。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>耶穌基督、亞拿尼亞、司提反</div>
+    </div>
+    <div class="verse">使徒行傳 9:3-6 — 「掃羅！掃羅！你為甚麼逼迫我？」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">約 A.D. 37–39 年</div>
+    <div class="stop-place">阿拉伯、大馬色、耶路撒冷 <span class="region">退隱與初次接觸使徒</span></div>
+    <div class="stop-body">悔改後保羅先往阿拉伯，三年後回到大馬色，再上耶路撒冷見彼得與雅各，因受懷疑而不久即離開。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>彼得（磯法）、主的兄弟雅各、巴拿巴</div>
+    </div>
+    <div class="verse">加拉太書 1:17-18 — 「我往阿拉伯去，後又回到大馬色。過了三年，才上耶路撒冷去見磯法。」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">約 A.D. 39–47 年</div>
+    <div class="stop-place">大數、安提阿 <span class="region">敘利亞</span></div>
+    <div class="stop-body">保羅退居故鄉大數一段時期，後巴拿巴將他帶到安提阿，二人在當地教會同工教導，使安提阿成為向外邦宣教的基地。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>巴拿巴、安提阿教會</div>
+    </div>
+    <div class="verse">使徒行傳 11:25-26 — 「他們足足有一年和教會一同聚集，教訓了許多人。」</div>
+  </div>
+
+</div>
+
+<!-- ============ 第一次旅程 ============ -->
+<div class="era">
+  <div class="era-label">第二階段 · A.D. 47–48</div>
+  <h2 class="era-title">第一次宣教旅程</h2>
+</div>
+<div class="timeline">
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 47 年</div>
+    <div class="stop-place">安提阿 → 居比路（撒拉米、帕弗）</div>
+    <div class="stop-body">聖靈差派巴拿巴和保羅出發。在帕弗，保羅使行邪術的以呂馬眼瞎，方伯士求保羅信主。約翰·馬可同行。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>巴拿巴、約翰·馬可、士求保羅、以呂馬</div>
+    </div>
+    <div class="verse">使徒行傳 13:2-3 — 「聖靈說：『要為我分派巴拿巴和掃羅，去做我召他們所做的工。』」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 47–48 年</div>
+    <div class="stop-place">彼西底的安提阿、以哥念、路司得、特庇 <span class="region">加拉太地區</span></div>
+    <div class="stop-body">保羅在猶太會堂講道，外邦人多有信主，但也屢遭猶太人逼迫。在路司得，保羅醫治瘸腿者，後被誤認為神明，又遭石頭打傷。提摩太可能於此時信主。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>巴拿巴、提摩太（路司得人）</div>
+    </div>
+    <div class="verse">使徒行傳 14:8-10 — 保羅對瘸腿者說：「你起來，兩腿站直！」</div>
+  </div>
+
+  <div class="stop end">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 48 年</div>
+    <div class="stop-place">返回路司得、以哥念、彼西底安提阿、別加，回到安提阿（敘利亞）</div>
+    <div class="stop-body">沿原路堅固各教會、設立長老，最後乘船回到敘利亞安提阿，向差派他們的教會報告神所成就的一切。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>巴拿巴、各地新立的教會長老</div>
+    </div>
+    <div class="verse">使徒行傳 14:26-27 — 「述說神同他們所行的一切事。」</div>
+  </div>
+
+</div>
+
+<!-- ============ 耶路撒冷會議 ============ -->
+<div class="era">
+  <div class="era-label">過渡 · 約 A.D. 49</div>
+  <h2 class="era-title">耶路撒冷會議</h2>
+</div>
+<div class="timeline">
+
+  <div class="stop start end">
+    <div class="stop-marker"></div>
+    <div class="stop-time">約 A.D. 49 年</div>
+    <div class="stop-place">耶路撒冷</div>
+    <div class="stop-body">為解決外邦信徒是否需受割禮、守摩西律法的爭議，保羅與巴拿巴上耶路撒冷，與眾使徒、長老商議，最終確立因信得救、外邦人不必受割禮的教義。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>彼得、雅各（主的兄弟）、巴拿巴、提多</div>
+    </div>
+    <div class="verse">使徒行傳 15:11 — 「我們得救乃是因主耶穌的恩，和他們一樣，這是我們所信的。」</div>
+  </div>
+
+</div>
+
+<!-- ============ 第二次旅程 ============ -->
+<div class="era">
+  <div class="era-label">第三階段 · A.D. 49–52</div>
+  <h2 class="era-title">第二次宣教旅程</h2>
+</div>
+<div class="timeline">
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 49 年</div>
+    <div class="stop-place">安提阿出發，經敘利亞、基利家，重訪加拉太各城</div>
+    <div class="stop-body">保羅與巴拿巴因馬可同行問題意見分歧而分道，保羅改與西拉同行，並在路司得加上提摩太一同前往。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>西拉、提摩太</div>
+    </div>
+    <div class="verse">使徒行傳 15:40 — 「保羅揀選了西拉，也出去，蒙弟兄們把他交於主的恩中。」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 50 年</div>
+    <div class="stop-place">特羅亞 → 腓立比 <span class="region">馬其頓</span></div>
+    <div class="stop-body">保羅在特羅亞夜間得「馬其頓的呼聲」異象，於是渡海到腓立比。在此呂底亞全家信主歸主，保羅與西拉因趕鬼被囚，半夜禁卒全家信主。路加可能於此加入同行。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>西拉、提摩太、路加、呂底亞、腓立比禁卒</div>
+    </div>
+    <div class="verse">使徒行傳 16:9-10 — 「馬其頓人站著求我說：『請你過來幫助我們。』」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 50 年</div>
+    <div class="stop-place">帖撒羅尼迦、庇哩亞 <span class="region">馬其頓</span></div>
+    <div class="stop-body">保羅在會堂中講論基督，部分猶太人和敬虔的希臘人信主，但也引起騷亂，保羅與西拉被迫夜間轉往庇哩亞；庇哩亞人較為開明，天天考查聖經。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>西拉、提摩太</div>
+    </div>
+    <div class="verse">使徒行傳 17:11 — 「這地方的人賢於帖撒羅尼迦的人，甘心領受這道，天天考查聖經。」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 50 年</div>
+    <div class="stop-place">雅典 <span class="region">亞該亞</span></div>
+    <div class="stop-body">保羅獨自在雅典，於亞略巴古向哲學家與市民宣講「未識之神」，論及創造主與復活，但回應有限。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>亞略巴古的哲士、丟尼修、大馬利</div>
+    </div>
+    <div class="verse">使徒行傳 17:23 — 「我倒看見你們有座壇，寫著『未識之神』。我現在把你們所不認識的神傳給你們。」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 50–52 年</div>
+    <div class="stop-place">哥林多 <span class="region">亞該亞 · 停留約一年半</span></div>
+    <div class="stop-body">保羅與亞居拉、百基拉同住同工（製作帳棚），在會堂教導，後因方伯迦流不予理會猶太人控告而平安事工。期間寫成《帖撒羅尼迦前後書》。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>亞居拉、百基拉、西拉、提摩太、迦流</div>
+      <div><b>書信</b>帖撒羅尼迦前書、帖撒羅尼迦後書</div>
+    </div>
+    <div class="verse">使徒行傳 18:9-10 — 「不要怕，只管講，不要閉口，有我與你同在。」</div>
+  </div>
+
+  <div class="stop end">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 52 年</div>
+    <div class="stop-place">以弗所（短暫）→ 凱撒利亞 → 耶路撒冷 → 安提阿</div>
+    <div class="stop-body">保羅由哥林多坐船至以弗所稍作停留，留下亞居拉夫婦，獨自上耶路撒冷後回到敘利亞安提阿，完成第二次旅程。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>亞居拉、百基拉</div>
+    </div>
+    <div class="verse">使徒行傳 18:21 — 「我必須往耶路撒冷去守節，以後我還要回到你們這裡來。」</div>
+  </div>
+
+</div>
+
+<!-- ============ 第三次旅程 ============ -->
+<div class="era">
+  <div class="era-label">第四階段 · A.D. 53–57</div>
+  <h2 class="era-title">第三次宣教旅程</h2>
+</div>
+<div class="timeline">
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 53–56 年</div>
+    <div class="stop-place">以弗所 <span class="region">亞細亞 · 停留約三年</span></div>
+    <div class="stop-body">保羅在推喏推古講堂教導，行了許多奇事，邪靈也認出他的權柄；銀匠底米丟因偶像生意受損而引發暴亂。期間寫成《加拉太書》《哥林多前書》，並可能寫《哥林多後書》部分初稿。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>亞波羅、底米丟、亞居拉、百基拉、推喏推古</div>
+      <div><b>書信</b>加拉太書、哥林多前書</div>
+    </div>
+    <div class="verse">使徒行傳 19:10 — 「這樣有兩年之久，叫一切住在亞細亞的，無論是猶太人，是希臘人，都聽見主的道。」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 56–57 年</div>
+    <div class="stop-place">馬其頓（腓立比、帖撒羅尼迦）→ 哥林多</div>
+    <div class="stop-body">保羅離開以弗所巡行馬其頓眾教會，鼓勵並收集捐項濟助耶路撒冷信徒，後再到哥林多停留三個月，於此寫成《羅馬書》。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>提多、提摩太、馬其頓眾教會</div>
+      <div><b>書信</b>哥林多後書、羅馬書</div>
+    </div>
+    <div class="verse">羅馬書 15:25-26 — 「現在我往耶路撒冷去，供給聖徒……為耶路撒冷聖徒中的窮人捐些錢。」</div>
+  </div>
+
+  <div class="stop end">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 57 年</div>
+    <div class="stop-place">特羅亞 → 米利都 → 推羅 → 凱撒利亞 → 耶路撒冷</div>
+    <div class="stop-body">在特羅亞，少年猶推古聽道時墜樓，保羅使他復活。在米利都向以弗所眾長老臨別講道，預言將遇苦難。途經推羅、凱撒利亞，先知亞迦布預言保羅將被捆綁，但保羅仍堅定上耶路撒冷。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>猶推古、以弗所眾長老、亞迦布、腓利</div>
+    </div>
+    <div class="verse">使徒行傳 20:24 — 「我卻不以性命為念，只要行完我的路程，成就我從主耶穌所領受的職事。」</div>
+  </div>
+
+</div>
+
+<!-- ============ 被捕與囚禁 ============ -->
+<div class="era">
+  <div class="era-label">第五階段 · A.D. 57–60</div>
+  <h2 class="era-title">被捕、受審與凱撒利亞囚禁</h2>
+</div>
+<div class="timeline">
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 57 年</div>
+    <div class="stop-place">耶路撒冷</div>
+    <div class="stop-body">保羅在聖殿被猶太人控告污穢聖殿而遭群眾圍攻，羅馬千夫長將他逮捕拘禁；保羅在公會前為自己辯護，引發法利賽人與撒都該人爭論。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>千夫長呂西亞、大祭司亞拿尼亞、保羅的外甥</div>
+    </div>
+    <div class="verse">使徒行傳 23:11 — 「主站在保羅旁邊，說：『不要害怕！你必須在凱撒面前作見證。』」</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 57–59 年</div>
+    <div class="stop-place">凱撒利亞 <span class="region">猶太省 · 囚禁約兩年</span></div>
+    <div class="stop-body">為避免暗殺，保羅被連夜護送至凱撒利亞，在巡撫腓力斯與後任非斯都面前受審，並向亞基帕王作見證，三人皆未能定其罪，但因保羅上訴於凱撒，遂被解往羅馬。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>腓力斯、非斯都、亞基帕王二世</div>
+    </div>
+    <div class="verse">使徒行傳 26:32 / 25:11 — 「我要上告於凱撒。」</div>
+  </div>
+
+</div>
+
+<!-- ============ 往羅馬 ============ -->
+<div class="era">
+  <div class="era-label">第六階段 · A.D. 59–62</div>
+  <h2 class="era-title">解送羅馬與監中歲月</h2>
+</div>
+<div class="timeline">
+
+  <div class="stop">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 59–60 年</div>
+    <div class="stop-place">凱撒利亞 → 米拉、革哩底 → 馬耳他 <span class="region">海上遇風暴遇難</span></div>
+    <div class="stop-body">保羅由百夫長猶流押解乘船前往羅馬，途中遭遇猛烈風暴十四日漂流，船最終在馬耳他島觸礁破裂，全船276人無一喪命，保羅在島上醫病、被毒蛇咬而無害。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>百夫長猶流、路加、亞里達古</div>
+    </div>
+    <div class="verse">使徒行傳 27:24 — 「保羅，不要害怕，你必定站在凱撒面前，並且與你同船的人，神都賜給你了。」</div>
+  </div>
+
+  <div class="stop end">
+    <div class="stop-marker"></div>
+    <div class="stop-time">A.D. 60–62 年</div>
+    <div class="stop-place">羅馬 <span class="region">義大利 · 軟禁約兩年</span></div>
+    <div class="stop-body">保羅抵達羅馬後在自己所租的房子裡軟禁，仍可接待賓客、傳講神國的道，毫無阻擋。此期間寫成《以弗所書》《腓立比書》《歌羅西書》《腓利門書》——即「監獄書信」。</div>
+    <div class="stop-meta">
+      <div><b>相關人物</b>提摩太、以巴弗提、阿尼西母、路加</div>
+      <div><b>書信</b>以弗所書、腓立比書、歌羅西書、腓利門書</div>
+    </div>
+    <div class="verse">使徒行傳 28:30-31 — 「凡來見他的人，他全都接待，放膽傳講神國的道。」</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="amen">行完所定的路程</div>
+  提摩太後書 4:7 —「那美好的仗我已經打過了，當跑的路我已經跑盡了，所信的道我已經守住了。」
+</div>
+
+<script>
+  const stops = document.querySelectorAll('.stop');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+  stops.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
